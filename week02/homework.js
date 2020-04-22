@@ -13,6 +13,7 @@ function Num(num){
     return /(\d+\.\d*)|(\d*)/.test(num);
 }
 
+// 不会做这题
 function Encoding(){
 
 }
