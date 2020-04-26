@@ -1,0 +1,7 @@
+function StringToNumber(){
+
+}
+
+function NumberToString(){
+
+}

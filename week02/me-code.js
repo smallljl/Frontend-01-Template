@@ -9,7 +9,7 @@
 /**
  * @return {boolean}
  */
-function Num(num){
+function Number(num){
     return /(\d+\.\d*)|(\d*)/.test(num);
 }
 
@@ -18,7 +18,7 @@ function Encoding(){
 
 }
 
-function matchStrig(str){
+function String(str){
     let reg = /(\')[^\']*\1|(\")[^"]\2/g;
     let res = [];
     let item = "";
@@ -27,5 +27,3 @@ function matchStrig(str){
     }
     return res;
 }
-
-console.log(matchStrig("'132' '3213'"));
