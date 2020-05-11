@@ -51,9 +51,6 @@ ${this.bodyText}`;
                     if(parser.isFinished){
                         resolve(parser.response)
                     }
-                    // console.log(parser.statusLine);
-                    // console.log(parser.headers);
-
                     connection.end();
                 });
                 connection.on("end",()=>{
