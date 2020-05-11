@@ -192,7 +192,7 @@ class ThunkedBodyParser{
                 this.length += char.charCodeAt(0) - "0".charCodeAt(0);
             }
         }
-
+  
         else if(current === this.WAITING_LENGTH_LINE_END){
             if(char === "\n"){
                 this.current = this.READING_TRUNK;
