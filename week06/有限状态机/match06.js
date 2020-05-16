@@ -1,7 +1,5 @@
 /*
- *
- *找aabc
- *
+ 处理abcabx
  */ 
 function match(string){
     let state = start;
@@ -11,7 +9,6 @@ function match(string){
     }
     return state === end;
 }
-
 
 function start(c){
     if(c === "a")
@@ -33,8 +30,33 @@ function foundA(c){
 
 function foundB(c){
     if(c === "c")
-        return end;
+        return foundC;
     else 
         return start(c);
 }
-console.log(match("aaabc"));
+
+function foundC(c){
+    if(c === "a"){
+        return foundA2;
+    } else {
+        return start(c);
+    }
+}
+
+function foundA2(c){
+    if(c === "b"){
+        return foundB2;
+    }else{
+        return start(c)
+    }
+}
+
+function foundB2(c){
+    if(c === "x"){
+        return end;
+    }else{
+        return foundB(c);   // 返回到找到ab的
+    } 
+}
+
+console.log(match("abcabcabx"));
