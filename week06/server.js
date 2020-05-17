@@ -7,6 +7,7 @@ const server = http.createServer((req,res)=>{
     res.writeHead(200,{"Content-Type":"text/plain"});
     res.end(`<html maaa=a >
 <head>
+<style>
 body div #myid{
     width:100px;
     background-color: #ff5000;

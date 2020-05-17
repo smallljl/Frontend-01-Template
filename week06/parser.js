@@ -1,9 +1,12 @@
 const EOF = Symbol("EOF");  //EOF: End Of File
 
 let currentToken = null;
+let currentAttribute = null;
 
 function emit(token){
-    console.log(token);
+    if(token.type !== "text"){
+        console.log(token);
+    }
 }
 
 function data(c){
@@ -13,6 +16,7 @@ function data(c){
         emit({
             type:"EOF"
         });
+        return;
     } else {
         emit({
             type:"text",
@@ -32,9 +36,15 @@ function tagOpen(c){
         };
         return tagName(c);
     } else {
+        emit({
+            type:"text",
+            content:c
+        });
         return;
     }
 }
+
+
 
 function tagName(c){
     if(c.match(/^[\t\n\f ]$/)){
@@ -56,19 +66,122 @@ function tagName(c){
 function beforeAttributeName(c){
     if(c.match(/^[\t\n\f ]$/)){  
         return beforeAttributeName;
-    } else if(c === ">"){
-        return data;
+    } else if(c === ">" || c === "/" || c === EOF){
+        return afterAttributeName(c);
     } else if(c === "="){
-        return beforeAttributeName;
+        
     } else {
-        return beforeAttributeName;
+        currentAttribute = {
+            name: "",
+            value: ""
+        };
+        return attributeName(c);
     }
 }
+
+function attributeName(c){
+    if(c.match(/^[\t\n\f ]$/) || c === "/" || c === ">" || c === EOF){
+        return afterAttributeName(c);
+    } else if(c === "="){
+        return beforeAttributeValue;
+    } else if(c === "\u0000"){
+
+    } else if(c === "\"" || c === "'" || c ==="<"){
+
+    } else {
+        currentAttribute.name += c;
+        return attributeName;
+    }
+}
+
+function beforeAttributeValue(c){
+    if(c.match(/^[\t\n\f ]$/) || c === "/" || c === ">" || c===EOF){
+        return beforeAttributeValue;
+    } else if(c === "\""){
+        return doubleQuotedAttributeValue;
+    } else if(c === "\'"){
+        return singleQuotedAttributeValue;
+    } else if(c === ">"){
+        return data;
+    } else {
+        return UnquotedAttributeValue(c);
+    }
+}
+
+function doubleQuotedAttributeValue(c){
+    if(c === "\""){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return afterQuotedAttributeValue;
+    } else if(c === "\u0000"){
+
+    } else if(c === EOF){
+
+    } else {
+        currentAttribute.value += c;
+        return doubleQuotedAttributeValue;
+    }
+}
+
+function singleQuotedAttributeValue(c){
+    if(c === "\'"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return afterQuotedAttributeValue;
+    } else if(c === "\u0000"){
+
+    } else if(c === EOF){
+
+    } else {
+        currentAttribute.value += c;
+        return doubleQuotedAttributeValue;
+    }
+}
+
+function afterQuotedAttributeValue(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        return beforeAttributeName;
+    } else if(c === "/"){
+        return selfClosingStartTag;
+    } else if(c === ">"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        emit(currentToken);
+        return data;
+    } else if(c === EOF){
+
+    } else {
+        currentAttribute.value += c;
+        return doubleQuotedAttributeValue;
+    }
+}
+
+function UnquotedAttributeValue(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return beforeAttributeName;
+    } else if(c === "/"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return selfClosingStartTag;
+    } else if(c === ">"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        emit(currentToken);
+        return data;
+    } else if(c === "\u0000"){
+
+    } else if(c === "\"" || c === "'" || c === "<" || c === "=" || c === "`"){
+
+    } else if(c === EOF){
+
+    } else {
+        currentAttribute.value += c;
+        return UnquotedAttributeValue;
+    }
+}
+
 
 // 单标签结束
 function selfClosingStartTag(c){
     if(c === ">"){
         currentToken.isSelfClosing = true;
+        emit(currentToken);
         return data;
     } else if(c === "EOF"){
 
@@ -77,8 +190,41 @@ function selfClosingStartTag(c){
     }
 }
 
-function endTagOpen(){
+function endTagOpen(c){
+    if(c.match(/^[a-zA-Z]$/)){
+        currentToken = {
+            type:"endTag",
+            tagName:""
+        }
+        return tagName(c);
+    } else if(c === ">"){
 
+    } else if(c === EOF){
+
+    }
+}
+
+function afterAttributeName(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        return afterAttributeName;
+    } else if(c === "/"){
+        return selfClosingStartTag;
+    } else if(c === "="){
+        return beforeAttributeValue;
+    } else if(c === ">"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        emit(currentToken);
+        return data;
+    } else if(c === EOF){
+
+    } else {
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        currentAttribute = {
+            name: "",
+            value: ""
+        };
+        return attributeName(c);
+    }
 }
 
 /**
