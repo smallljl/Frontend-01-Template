@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\week06\\有限状态机\\match03.js"
+            "program": "${workspaceFolder}\\week06\\client.js"
         }
     ]
 }
