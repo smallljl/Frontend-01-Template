@@ -1,5 +1,5 @@
 const http = require("http");
-const server = http.createServer((req,res)=>{
+http.createServer((req,res)=>{
     console.log("request reveived");
     console.log(req.headers);
     res.setHeader("Content-Type","text/html");
