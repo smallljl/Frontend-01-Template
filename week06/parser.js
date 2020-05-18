@@ -8,9 +8,9 @@ let currentTextNode = null; // 处理文本节点
  * @return: 
  */
 function emit(token){
-    if(token.type === "text"){
-        console.log(token);
-    }
+    // if(token.type === "text"){
+    //     console.log(token);
+    // }
     let top = stack[stack.length-1];
     if(token.type === "startTag"){
         let element = {

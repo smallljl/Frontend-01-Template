@@ -1,5 +1,5 @@
 /*
- * abababx
+ * abababx  homework
  */ 
 function match(string){
     let state = start;
