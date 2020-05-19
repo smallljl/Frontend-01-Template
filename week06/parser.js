@@ -1,16 +1,63 @@
+const css = require("css");
 let currentToken = null;
 let currentAttribute = null;
 let stack = [{type:"document",children:[]}];
 let currentTextNode = null; // 处理文本节点
+
+
+let rules = [];
+// 加入一个新的函数，addClassRules，这里我们把CSS规则暂存到一个数组里面
+function addClassRules(text){
+    let ast = css.parse(text);
+    console.log(JSON.stringify(ast,null,"   "));
+    rules.push(...ast.stylesheet.rules);
+}
+
+function match(element,selector){
+    
+}
+
+function computedCSS(element){
+    let elements = stack.slice().reverse();   // CSS 计算从内到外  body html document
+    if(!element.computedStyle){
+        element.computedStyle = {};
+    }
+    for(let rule of rules){
+        let selectorParts = rule.selectors[0].split(" ").reverse();  // 匹配规则   "body div #myid"
+
+        if(!match(element,selectorParts[0]))
+            continue;
+        
+        /**
+         * 如果选择器先循环完 证明选择器是有效的
+         */
+        let matched = false;
+        let j = 1;
+        for(let i = 0; i < elements.length;i++){
+            if(match(elements[i],selectorParts[j])){
+                j++;
+            }
+        }
+        if(j >= selectorParts.length){
+            matched = true; // 匹配到了
+        }
+        if(matched){
+            console.log("Element",element, "matched rule",rule);
+        }
+    }
+}
+
+
+
 /**
  * @description:构造DOM树 
  * @param {type} 
  * @return: 
  */
 function emit(token){
-    // if(token.type === "text"){
-    //     console.log(token);
-    // }
+    if(token.type !== "text"){
+        console.log(token);
+    }
     let top = stack[stack.length-1];
     if(token.type === "startTag"){
         let element = {
@@ -28,6 +75,10 @@ function emit(token){
                 });
             }
         }
+
+        // 开始计算CSS
+        computedCSS(element);
+
         top.children.push(element);
         element.parent = top;
         if(!token.isSelfClosing){  // 不是自封闭
@@ -38,6 +89,10 @@ function emit(token){
         if(top.tagName !== token.tagName){
             throw new Error("Tag start end doesn't match!");
         } else {
+            //++++++++++++++++++++++++++遇到style标签时，执行添加CSS规则的操作+++++++++++++++++++++++++++++++++++++++++++++//
+            if(top.tagName === "style"){
+                addClassRules(top.children[0].content);
+            }
             stack.pop();
         }
         currentTextNode = null;

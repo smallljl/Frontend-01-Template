@@ -1,5 +1,5 @@
 const net = require("net");
-const parser = require("./parser01.js")
+const parser = require("./parser.js");
 class Request {
     constructor(options){
         this.method = options.method;

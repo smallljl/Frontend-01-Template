@@ -54,11 +54,7 @@ function data(c){
     if(c === "<"){
         return tagOpen;
     } else if(c === EOF){
-        emit({
-            type:"text",
-            content:c
-        });
-        return data;
+       
     } else {
         emit({
             type:"text",
@@ -73,10 +69,22 @@ function tagOpen(c){
         return endTagOpen;
     } else if(c.match(/^[a-zA-Z]$/)){
         currentToken = {
-            type:"endTag",
+            type:"startTag",
             tagName:""
         }
         return tagName(c);  // resume
+    }  else {
+        return;
+    }
+}
+
+function endTagOpen(c){
+    if(c.match(/^[a-zA-Z]$/)){
+        currentToken = {
+            type:"endTag",
+            tagName:""
+        }
+        return tagName(c);
     } else if(c === ">"){
 
     } else if(c === EOF){
@@ -86,16 +94,12 @@ function tagOpen(c){
     }
 }
 
-function endTagOpen(c){
-
-}
-
 function tagName(c){
     if(c.match(/^[\t\n\f ]$/)){
         return beforeAttributeName;
     } else if(c === "/"){
         return selfClosingStartTag;
-    } else if(c.mathc(/^[A-Z]$/)){
+    } else if(c.match(/^[A-Z]$/)){
         currentToken.tagName += c.toLowerCase();
         return tagName;
     } else if(c === ">"){
@@ -168,6 +172,8 @@ function beforeAttributeValue(c){
     } else if(c === "\'"){
         return singleQuotedAttributeValue;
     } else if(c === ">"){
+        
+    } else {
         return UnquotedAttributeValue(c);
     }
 }
@@ -259,5 +265,4 @@ module.exports.parseHTML = function parseHTML(html){
         state = state(c);
     }
     state = state(EOF);
-    console.log(stack);
 }
