@@ -14,7 +14,40 @@ function addClassRules(text){
 }
 
 function match(element,selector){
-    
+    if(!selector ||!selector.attributes){
+        return false;
+    }
+    if(selector.charAt(0) === "#"){
+        var attr = element.attributes.filter(attr=> attr.name === "id")[0];
+    }
+    if(attr && attr.value === selector.replace("#","")){
+        return true;
+    }else if(selector.charAt(0) === "."){
+        var attr = element.attributes.filter(attr => attr.name === "class")[0];
+        if(attr && attr.value === selector.replace(".","")){
+            return true;
+        } 
+    } else {
+        if(element.tagName === selector){
+            return true;
+        }
+    }
+    return false;
+}
+
+function specificity(selector){
+    var p = [0,0,0,0];
+    var selectorParts = selector.split(" ");
+    for(var part of selectorParts){
+        if(part.charAt(0) === "#"){
+            p[1] += 1;
+        } else if(part.char(0) === "." ){
+            p[2] += 1;
+        } else {
+            p[3] += 1;
+        }
+    }
+    return p;
 }
 
 function computedCSS(element){
@@ -24,10 +57,8 @@ function computedCSS(element){
     }
     for(let rule of rules){
         let selectorParts = rule.selectors[0].split(" ").reverse();  // 匹配规则   "body div #myid"
-
         if(!match(element,selectorParts[0]))
             continue;
-        
         /**
          * 如果选择器先循环完 证明选择器是有效的
          */
@@ -42,12 +73,26 @@ function computedCSS(element){
             matched = true; // 匹配到了
         }
         if(matched){
+            var sp = specificity(rule.selector[0]);
+            var computedStyle = element.computedStyle;
+            for(var declaration of rule.declarations){
+                if(!computedStyle[declaration.property]){
+                    computedStyle[declaration.property] = {};
+                }
+                if(!computedStyle[declaration.property].specificity){
+                    computedStyle[declaration.property].value = declaration.value;
+                    computedStyle[declaration.property].specificity = sp;
+                } else if(compare(computedStyle[declaration.property].specificity,sp) < 0 ){
+                    for(var k = 0; k < 4; k++){
+                        computedStyle[declaration.property][declaration.value[k]] += sp[k];
+                    }
+                }
+                computedStyle[declaration.property].value  = declaration.value;
+            }
             console.log("Element",element, "matched rule",rule);
         }
     }
 }
-
-
 
 /**
  * @description:构造DOM树 

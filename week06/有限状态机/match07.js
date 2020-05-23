@@ -60,3 +60,8 @@ function foundB2(c){
 }
 
 console.log(match("abababx","I am a abababababx"));
+let a = "aaaa";
+a.indexOf("d");
+function match(a,b){
+   
+}
