@@ -1,6 +1,6 @@
 <input type="range" id="r" min=0 max=255><br/>
 <input type="range" id="g" min=0 max=255><br/>
-<input type="range" id="b" min=0 max=255>
+<input type="range" id="b" min=0 max=255><br/>
 <div id="color" style="width: 200px;height: 200px;"></div>
 <script>
     let object = {
@@ -62,8 +62,7 @@
     p.a = {x:4};
     console.log(v);
     **/
-    
-    let p = reactive({r:200,g:150,b:120});  
+    let p = reactive({r:200,g:150,b:120});
     effect(()=> {
       document.getElementById("r").value = p.r;
     });

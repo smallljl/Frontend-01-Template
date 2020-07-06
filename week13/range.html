@@ -16,7 +16,7 @@
   let baseX = 0,baseY = 0;
   dragable.addEventListener("mousedown",(event)=>{
     let startX = event.clientX,startY = event.clientY;
-    console.log(startX,startY)
+    console.log(startX,startY);
     let move = (event)=>{
       let range = nearest(event.clientX,event.clientY);
       // range.deleteContent();
