@@ -1,0 +1,21 @@
+<div id="a">
+  <span>1</span>
+  <p>2</p>
+  <a href="javascript:void(0)">3</a>
+  <div>4</div>
+</div>
+<script>
+  let element = document.getElementById("a");
+  function reverseChildren(element){
+    let children = Array.prototype.slice.call(element.childNodes);
+    // element.innerHTML = "";
+    for(let child of children){
+      element.removeChild(child);
+    }
+    children.reverse();
+    for(let child of children){
+      element.appendChild(child);
+    }
+  }
+  reverseChildren(element);
+</script>

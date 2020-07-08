@@ -1,0 +1,20 @@
+<div id="a">
+  <span>1</span>
+  <p>2</p>
+  <a href="javascript:void(0)">3</a>
+  <div>4</div>
+</div>
+<script>
+  let element = document.getElementById("a");
+  function reverseChildren(element){
+    let range = new Range();
+    range.selectNodeContents(element);   // 选中子元素
+    let fragment = range.extractContents();  // 摘下子元素
+    let l = fragment.childNodes.length;
+    while(l-- > 0){
+      fragment.appendChild(fragment.childNodes[l]);   // fragment 不会有任何的重排和重绘
+    }         
+    element.appendChild(fragment);
+  }
+  reverseChildren(element);
+</script>
