@@ -1,0 +1,222 @@
+<style>
+  .cell{
+    width:100px;
+    height:100px;
+    background-color: yellowgreen;
+    display:inline-block;
+    border:solid 1px white;
+    vertical-align: middle;
+    line-height: 100px;
+    font-size: 50px;
+    text-align: center;
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #board{
+    width: 350px;
+  }
+</style>
+<div id="board"></div>
+<script>
+  let pattern = [
+    0,0,0,
+    0,0,0,
+    0,0,0
+  ];
+  let color = 1;
+
+  /**
+   * @description:渲染棋盘 
+   * @param {type} 
+   * @return: 
+   */
+  function show(){
+    let board = document.getElementById("board");
+    board.innerHTML = "";
+    for(let i = 0; i < 3; i++){   // y
+      for(let j = 0; j < 3; j++){  // x
+          let cell = document.createElement("div");
+          cell.classList.add("cell");
+          cell.innerText = pattern[i * 3 +j] == 2 ? "X" :
+              pattern[i * 3 + j] == 1 ? "O" : "";
+          cell.addEventListener("click", () => userMove(j, i));
+          board.appendChild(cell);
+      }
+      board.appendChild(document.createElement("br"));
+    }
+  }
+
+  /**
+   * @description: 我方移动棋子 
+   * @param {type} 
+   * @return: 
+   */
+  function userMove(x,y){
+    if(pattern[y * 3 + x] !== 0) return;
+    pattern[y* 3 + x] = color;
+    if(check(pattern,color)){
+      alert(color === 2 ? "X is winner!" : "O is winner!");
+    }
+    color = 3 - color;
+    willWin(pattern,color);  // check 相反
+    show();
+    computerMove();
+    // if(willWin(pattern,color)){
+    //   console.log(color === 2 ? "X will winner!" : "O will winner!");
+    // }
+  }
+
+  /**
+   * @description:敌方移动的棋子 
+   * @param {type} 
+   * @return: 
+   */
+  function computerMove(){
+    let choice = baseChoice(pattern,color)
+    if(choice.point)
+      pattern[choice.point[1] * 3 + choice.point[0]] = color;
+    if(check(pattern,color)){
+      alert(color === 2 ? "X is winner!" : "O is winner!");
+    }
+    color = 3 - color;
+    show();
+  }
+
+
+  /**
+   * @description: 检查节点是否赢 
+   * @param {type} 
+   * @return: 
+   */
+  function check(pattern,color){
+    for(let i = 0; i < 3;i++){
+      let win = true;
+      for(let j = 0; j < 3; j ++){
+        if(pattern[i* 3 + j] !== color){
+          win = false;
+          break;
+        }
+      }
+      if(win)
+        return true;
+    }
+
+    for(let i = 0; i < 3;i++){
+      let win = true;
+      for(let j = 0; j < 3; j ++){
+        if(pattern[j * 3 + i] !== color){
+          win = false;
+          break;
+        }
+      }
+      if(win)
+        return true;
+    }
+
+    {
+      let win = true;
+      for(let j = 0; j < 3; j++){
+        if(pattern[j*3 +j] !== color){
+          win = false
+        }
+      }
+      if(win)
+        return true;
+    }
+
+    {
+      let win = true;
+      for(let j = 0; j < 3; j++){
+        if(pattern[j* 3 + (2-j)] !== color){
+          win = false;
+        }
+      }
+      if(win)
+        return true;
+    }
+  }
+
+  /**
+   * @description:克隆 
+   * @param {type} 
+   * @return: 
+   */
+  function clone(pattern){
+    return Object.create(pattern);
+    // return JSON.parse(JSON.stringify(pattern));
+  }
+
+  /**
+   * @description: 判断是否将要赢 
+   * @param {type} 
+   * @return: 
+   */
+  function willWin(pattern,color){
+    for(let i = 0; i < 3; i ++){
+      for(let j = 0; j < 3; j++){
+        if(pattern[i * 3 +j])
+          continue
+        let tmp = clone(pattern);
+        tmp[i * 3 + j] = color;
+        if(check(tmp,color)){
+          return [j,i];
+        }
+      }
+    }
+    return false;
+  }
+
+  let openings = new Map();
+  openings.set([
+    0,0,0,
+    0,0,0,
+    0,0,0
+  ].toString()+"1",{
+    point:[1,1],
+    result:0
+  });
+
+  /**
+   * @description: 理解不了哟 ************
+   * @param {type} 
+   * @return: 
+   */
+  function baseChoice(pattern,color){
+    if(openings.has(pattern.toString()+color)){
+      return openings.get(pattern.toString()+color);
+    }
+    let point = willWin(pattern,color);
+    if(point){
+      return {
+        point:point,
+        result:1
+      }
+    }
+    let result = -1;
+    outer:for(let i = 0; i < 3; i++){
+      for(let j = 0; j < 3; j++){
+        // 遍历所有空位，找到对对方最不利的局面
+        if(pattern[i * 3 + j] !== 0)
+          continue
+        let tmp = clone(pattern);
+        tmp[i * 3 +j] = color;
+        let opp = baseChoice(tmp, 3 - color); // 对方的最佳选择
+        // 选择对方最差的结果，并比我们当前的更好结果，作为我们的选择
+        // 让对方最差的选择就是我方最好的选择  
+        if(-opp.result >= result){
+          point = [j,i];  // x y
+          result = -opp.result;
+        }
+        if(result === 1)
+          break outer;
+      }
+    }
+    return {
+      point:point,
+      result: point ? result : 0,
+    }
+  }
+
+  show(pattern);
+</script>
