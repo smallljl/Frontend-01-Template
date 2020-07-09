@@ -204,7 +204,7 @@
         let opp = baseChoice(tmp, 3 - color); // 对方的最佳选择
         // 选择对方最差的结果，并比我们当前的更好结果，作为我们的选择
         // 让对方最差的选择就是我方最好的选择  
-        if(-opp.result >= result){
+        if(-opp.result >= result){  // 对方最差的情况值越大
           point = [j,i];  // x y
           result = -opp.result;
         }
