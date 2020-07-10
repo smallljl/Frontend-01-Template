@@ -40,20 +40,34 @@
     document.getElementsByClassName("yellow")[0].classList.add("light");
   }
 
-  function sleep(time){
-    return new Promise((resolve,reject)=>{
-      setTimeout(resolve,time)
-    });
+  /**
+   * @description: 
+   * @param {type} 
+   * @return: 
+   */
+  function go1(){
+    green(); // 10秒
+    setTimeout(yellow,10000);  // 2 
+    setTimeout(red,12000);   // 5
+    setTimeout(go,17000) 
   }
+
+  /**
+   * @description: go函数的优化1
+   * @param {type} 
+   * @return: 
+   */
   function go(){
     green();
-    sleep(1000).then(()=> {
+    setTimeout(function(){
       yellow();
-      return sleep(200);
-    }).then(()=>{
-      red();
-      return sleep(500);
-    }).then(go);
+      setTimeout(function(){
+        red();
+        setTimeout(function(){
+          go();
+        },100)
+      },200)
+    },1000)
   }
   go();
 </script>
