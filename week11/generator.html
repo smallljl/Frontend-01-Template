@@ -89,7 +89,7 @@
       return;
     if(value instanceof Promise)
     value.then(()=>{
-      co(iterator);
+      run(iterator);
     });
   }
 
@@ -101,7 +101,7 @@
         return;
       if(value instanceof Promise)
       value.then(()=>{
-        co(iterator);
+        run(iterator);
       });
     }
   }
