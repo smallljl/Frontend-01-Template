@@ -8,13 +8,36 @@ class Carousel {
     this.properties = new Map();
   }
   render(){
-    return <div class="carousel">
-      { this.data.map(url=>{
-        let element = <img src={url}/>;
-        element.addEventListener("dragstart",event=>event.preventDefault());
-        return element;
-      })}
-    </div>
+    let chlidren = this.data.map(url=>{
+      let element = <img src={url}/>;
+      element.addEventListener("dragstart",event=>event.preventDefault());
+      return element;
+    });
+
+    let root = <div class="carousel">
+      {  chlidren  }
+    </div>;
+    
+    let position = 0;
+    let nextPic = () => {
+      let nextPosition = (position + 1) % this.data.length;  // 下一个
+      let current = chlidren[position];
+      let next = chlidren[nextPosition];
+      current.style.transition = "ease 0s";
+      next.style.transition = "ease 0s";
+      current.style.transform = `translateX(${- 100*position}%)`;
+      next.style.transform = `translateX(${100 -100*nextPosition}%)`;
+      setTimeout(function(){
+        current.style.transition = "";  // = "" 用 css rule
+        next.style.transition = "";
+        current.style.transform = `translateX(${-100 - 100*position}%)`;
+        next.style.transform = `translateX(${ -100*nextPosition}%)`;
+        position = nextPosition;
+      },16)
+      setTimeout(nextPic,3000);
+    }
+    setTimeout(nextPic,3000);
+    return root;
   }
   setAttribute(name,value){  // attribute
     this[name] = value;
