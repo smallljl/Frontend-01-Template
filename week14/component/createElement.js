@@ -8,13 +8,12 @@ export function createElement(Cls,attributes,...children){
     });
   }
   for(let name in attributes){
-    o.setAttribute(name,attributes[name]);  // 不会触发set class
-    // o[name] = attributes[name];
+    o.setAttribute(name, attributes[name]);
   }
   let visit = (children) => {
     for(let child of children){
       if(typeof child === "object" && child instanceof Array){
-        visit(child)
+        visit(child);
         continue;
       }
       if(typeof child === "string")
@@ -48,7 +47,7 @@ export class Wrapper{
     // child.mountTo(this.root);
     this.children.push(child);
   }
-  addEventListener(type,list,config){
+  addEventListener(){
     this.root.addEventListener(...arguments);    
   }
   get style(){
