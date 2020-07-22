@@ -44,7 +44,6 @@ export class Wrapper{
     this.root.setAttribute(name,value);
   }
   appendChild(child){
-    // child.mountTo(this.root);
     this.children.push(child);
   }
   addEventListener(){
