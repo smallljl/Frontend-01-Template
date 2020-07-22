@@ -1,6 +1,6 @@
+
 // React版的创建
 import {createElement,Text,Wrapper} from "./createElement";
-import {carousel} from "./carousel.view";
 
 class Carousel {
   constructor(config){
