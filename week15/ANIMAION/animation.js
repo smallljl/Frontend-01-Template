@@ -1,4 +1,4 @@
-export class Timeline {
+class Timeline {
     constructor(){
       this.animations = [];
       this.requestID = null;
@@ -6,18 +6,13 @@ export class Timeline {
         let t =  Date.now() - this.startTime;
         let animations = this.animations.filter(animation => !animation.finished);
         for(let animation of this.animations){
-  
           let {object,property,start,end,timingFunction,duration,template,delay} = animation;
-  
-          let progression = timingFunction((t - delay)/duration); // 0- 1 之间的数
-  
+          let progression = timingFunction((t - delay)/duration); // 0 - 1 之间的数
           if(t > animation.duration + animation.delay){ // 到末尾了
             progression = 1;
             animation.finished = true;
-          }  
-  
+          }
           let value = start + progression * (end - start); // value 就是根据progression算出当前的位置
-          
           object[property] = template(value);
         }
         if(animations.length)
@@ -26,7 +21,7 @@ export class Timeline {
     }
     pause(){
       if(this.requestID !== null)
-        cancelAnimationFrame( this.requestID);
+        cancelAnimationFrame(this.requestID);
     }
     start(){
       this.startTime = Date.now();
@@ -37,7 +32,7 @@ export class Timeline {
     }
   }
   
-  export class Animation {
+class Animation {
     constructor(object,property,template, start,end,duration,delay,timingFunction){
       this.object = object;
       this.template = template;
@@ -50,7 +45,6 @@ export class Timeline {
       // ease linear easeIn easeOut
     }
   }
-  
   /*
     let animation = new Animation(object,property,start,end,duration,delay,timingFunction);
     let animation2 = new Animation(object,property,start,end,duration,delay,timingFunction);

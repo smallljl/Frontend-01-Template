@@ -16,19 +16,18 @@
 <div id="el"></div>
 <div id="el2"></div>
 <button id="pause">pause</button>
-<script type="module">
-    import { Timeline,Animation } from "./animation.js";
+<script src="./animation.js"></script>
+<script>
     let el = document.getElementById("el");
 
     let linear = t => t;
 
     let tl = new Timeline;
-    tl.add(new Animation(el.style,"transform",v => `translateX(${v}px)`,0,400,5000,0, linear));
+    tl.add(new Animation(el.style,"transform",v => `translateX(${v}px)`,0,700,5000,0,linear));
     tl.start();
 
-    // document.getElementById("el2").style.transform = "translateX(400px)";
-
+    document.getElementById("el2").style.transform = "translateX(700px)";
     document.getElementById("pause").addEventListener("click",()=>{
         tl.pause();
-    })
+    });
 </script>

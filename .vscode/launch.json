@@ -5,13 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "name": "Launch Chrome",
             "request": "launch",
-            "name": "启动程序",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\week15\\component\\parserText.js"
-        }
+            "type": "pwa-chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        },
     ]
 }
