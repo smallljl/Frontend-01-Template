@@ -1,24 +1,24 @@
 <style>
-  #el{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: skyblue;
-  } 
-</style>
-<div id="el"></div>
-<script>
-  let el = document.getElementById("el");
-  el.style.transition = "ease 10s";
-  // el.style.transform = "translate(300px,300px)";
-
-  function start(){
-    el.style.transform = "translate(300px,300px)";
-  }  
-
-  function stop(){
-    // getComputedStyle  后的值  transform: matrix(1, 0, 0, 1, 43.9866, 43.9866);
-    el.style.transition = "none";
-    el.style.transform = getComputedStyle(el).transform;
-  }
-</script>
+    #el{
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: skyblue;
+    }
+  </style>
+  <div id="el"></div>
+  <script>
+    let el = document.getElementById("el");
+    el.style.transition = "ease 10s";
+    // el.style.transform = "translate(300px,300px)";
+  
+    function start(){
+      el.style.transform = "translate(300px,300px)";
+    }
+  
+    function stop(){
+      // getComputedStyle  后的值  transform: matrix(1, 0, 0, 1, 43.9866, 43.9866);
+      el.style.transition = "none";
+      el.style.transform = getComputedStyle(el).transform;
+    }
+  </script>
