@@ -26,8 +26,11 @@
     let linear = t => t;
 
     let tl = new Timeline;
-    tl.add(new Animation(el.style,"transform",v => `translateX(${v}px)`,0,700,2000,0,linear));
-  
+    tl.add(new Animation(el.style,"transform",0,700,7000,0,linear,v => `translateX(${v}px)`));
+
+    // tl.add(new ColorAnimation(el.style,"backgroundColor",
+    //     {r:0,g:0,b:0,a:1},{r:255,g:0,b:0,a:0},4000,0,linear),0);
+
     tl.start();
     // document.getElementById("el2").style.transform = "translateX(700px)";
     document.getElementById("pause").addEventListener("click",()=>{
@@ -37,6 +40,8 @@
       tl.resume();
     });
     document.getElementById("el2-start-btn").addEventListener("click",()=>{
-      tl.add(new Animation(el2.style,"transform",v => `translateX(${v}px)`,0,700,2000,0,linear),0);
+      console.log("11")
+      tl.add(new ColorAnimation(el.style,"backgroundColor",
+        {r:0,g:0,b:0,a:1},{r:255,g:0,b:0,a:1},7000,0,linear));
     });
 </script>
