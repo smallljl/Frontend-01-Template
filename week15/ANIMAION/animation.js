@@ -80,7 +80,7 @@ class Animation {
       // ease linear easeIn easeOut
     }
     valueFromProgression(progression){
-      return this.start + progression * (this.end - this.start)
+      return this.start + progression * (this.end - this.start);
     }
   }
 
