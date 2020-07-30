@@ -1,3 +1,5 @@
+import { enableGesture } from "./gesture.js";
+
 export function createElement(Cls,attributes,...children){
   let o;
   if(typeof Cls === "string"){
@@ -42,13 +44,25 @@ export class Wrapper{
   }
   setAttribute(name,value){  // attribute
     this.root.setAttribute(name,value);
+
+    // 绑定事件
+    if(name === "enableGesture"){
+      enableGesture(this.root);
+    }
+
+    if(name.match(/^on([\s\S]+)$/)){
+      // 字符转小写
+      let eventName = RegExp.$1.replace(/^[\s\S]+/,c => c.toLowerCase());
+      this.addEventListener(eventName,value);
+    }
+
   }
   appendChild(child){
     // child.mountTo(this.root);
     this.children.push(child);
   }
   addEventListener(){
-    this.root.addEventListener(...arguments);    
+    this.root.addEventListener(...arguments);
   }
   get style(){
     return this.root.style;

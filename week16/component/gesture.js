@@ -1,4 +1,4 @@
-function enableGesture(element){
+export function enableGesture(element){
 
   let contexts = Object.create(null);
 
