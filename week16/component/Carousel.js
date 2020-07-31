@@ -17,48 +17,101 @@ export class Carousel {
     let position = 0;
 
     let nextPicStopHandler = null;
-
     
 
-    
+    let children = this.data.map((url,currentPosition)=>{
 
-    let chlidren = this.data.map((url,currentPosition)=>{
-      
+      let lastPosition = (currentPosition - 1 + this.data.length) % this.data.length; // 最后一个
+      let nextPosition = (currentPosition + 1) % this.data.length;  // 下一个
+
+      let offset = 0;
+
       let onStart = () => {
         clearTimeout(nextPicStopHandler);
         timeline.pause()
+
+        let currentElement = children[currentPosition];
+
+        let currentTransformValue = Number(currentElement.style.transform.match(/translateX\(([\s\S]+)px\)/)[1]);  // 第一个括号匹配到的内容
+        offset = currentTransformValue + 500 * currentPosition;
+
       }
       
       let onPan = (event) => {
-        let lastPosition = (currentPosition - 1 + this.data.length) % this.data.length; // 最后一个
-        let nextPosition = (currentPosition + 1) % this.data.length;  // 下一个
+        console.log(children);
+        let dx = event.clientX - event.startX;
+        let lastElement = children[lastPosition];
+        let currentElement = children[currentPosition];
+        let nextElement = children[nextPosition];
 
-        let lastElement = chlidren[lastPosition];
-        let currentElement = chlidren[currentPosition];
-        let nextElement = this.children[nextPosition];
+        let currentTransformValue = - 500 * currentPosition + offset  + dx;
+        let lastTransformValue = -500 + -500 * lastPosition + offset  + dx;
+        let nextTransformValue = 500 -500 * nextPosition + offset  + dx;
 
-        let currentTransformValue = /translateX\(([\s\S]+)px\)/.match()
+       
+        console.log(currentTransformValue + dx);
+        currentElement.style.transform = `translateX(${currentTransformValue}px)`;
+        lastElement.style.transform = `translateX(${lastTransformValue}px)`;
+        nextElement.style.transform = `translateX(${nextTransformValue}px)`;
 
-        console.log(currentElement,currentElement.style.transform);
+        // current.style.transform = `translateX(${offset * 500 - 500*position}px)`;
+        // last.style.transform = `translateX(${offset * 500 -500 - 500*lastPosition}px)`;
+        // next.style.transform = `translateX(${offset * 500 + 500 - 500*nextPosition}px)`;
+
+        // position = (position - offset + this.data.length) % this.data.length;
+
       }
 
-      let element = <img src={url} onStart={ onStart } onPan={onPan} enableGesture={true}/>;
+      let onPanend = event => {
+        let dx = event.clientX - event.startX;
+        let lastElement = children[lastPosition];
+        let currentElement = children[currentPosition];
+        let nextElement = children[nextPosition];
+
+        let direction = 0;
+        if(dx + offset > 250){
+          direction = 1;
+        } else if(dx + offset < -250) {
+          direction = -1;
+        }
+
+        timeline.reset();
+        timeline.start();
+
+        let currentTransformValue = - 500 * currentPosition + offset  + dx;
+        let lastTransformValue = -500 + -500 * lastPosition + offset  + dx;
+        let nextTransformValue = 500 -500 * nextPosition + offset  + dx;
+
+
+        let currentAnimation = new Animation(current.style,"transform",
+          currentTransformValue,- 500 * currentPosition - direction * 500,500,0,linear, v => `translateX(${5 * v}px)`);
+        let nextAnimation = new Animation(next.style,"transform",
+          nextTransformValue,500 -500 * nextPosition + direction * 500,500,0,linear, v => `translateX(${5 * v}px)`);
+        let lastAnimation = new Animation(last.style,"transform",
+          lastTransformValue,-500 + -500 * lastPosition + direction * 500,500,0,linear, v => `translateX(${5 * v}px)`);
+
+        timeline.add(currentAnimation);
+        timeline.add(nextAnimation);
+        timeline.add(lastAnimation);
+
+      }
+
+      let element = <img src={url} onStart={ onStart } onPan={onPan} onPanend={onPanend} enableGesture={true}/>;
+      element.style.transform = "translateX(0px)";
       element.addEventListener("dragstart",event=>event.preventDefault());
       return element;
     });
 
     let root = <div class="carousel">
-      {  chlidren  }
+      {  children  }
     </div>;
-    
-   
-
     
     let nextPic = () => {
       let nextPosition = (position + 1) % this.data.length;  // 下一个
-      let current = chlidren[position];
-      let next = chlidren[nextPosition];
+      let current = children[position];
+      let next = children[nextPosition];
 
+      console.log(current);
       let currentAnimation = new Animation(current.style,"transform",
         - 100*position,-100 - 100*position,500,0,linear, v => `translateX(${5 * v}px)`);
       let nextAnimation = new Animation(next.style,"transform",
