@@ -54,12 +54,6 @@ export class Carousel {
         lastElement.style.transform = `translateX(${lastTransformValue}px)`;
         nextElement.style.transform = `translateX(${nextTransformValue}px)`;
 
-        // current.style.transform = `translateX(${offset * 500 - 500*position}px)`;
-        // last.style.transform = `translateX(${offset * 500 -500 - 500*lastPosition}px)`;
-        // next.style.transform = `translateX(${offset * 500 + 500 - 500*nextPosition}px)`;
-
-        // position = (position - offset + this.data.length) % this.data.length;
-
       }
 
       let onPanend = event => {
@@ -82,17 +76,20 @@ export class Carousel {
         let lastTransformValue = -500 + -500 * lastPosition + offset  + dx;
         let nextTransformValue = 500 -500 * nextPosition + offset  + dx;
 
-
-        let currentAnimation = new Animation(current.style,"transform",
+        let currentAnimation = new Animation(currentElement.style,"transform",
           currentTransformValue,- 500 * currentPosition - direction * 500,500,0,linear, v => `translateX(${5 * v}px)`);
-        let nextAnimation = new Animation(next.style,"transform",
+        let nextAnimation = new Animation(nextElement.style,"transform",
           nextTransformValue,500 -500 * nextPosition + direction * 500,500,0,linear, v => `translateX(${5 * v}px)`);
-        let lastAnimation = new Animation(last.style,"transform",
+        let lastAnimation = new Animation(lastElement.style,"transform",
           lastTransformValue,-500 + -500 * lastPosition + direction * 500,500,0,linear, v => `translateX(${5 * v}px)`);
 
         timeline.add(currentAnimation);
         timeline.add(nextAnimation);
         timeline.add(lastAnimation);
+
+        position = (position - offset + this.data.length) % this.data.length;
+
+        nextPicStopHandler = setTimeout(nextPic,3000);
 
       }
 
