@@ -96,7 +96,7 @@ export class Carousel {
 
       }
 
-      let element = <img src={url} onStart={ onStart } onPan={onPan} onPanend={onPanend} enableGesture={true}/>;
+      let element = <img src={url} onStart={ onStart } onPan={ onPan } onPanend={ onPanend } enableGesture={true}/>;
       element.style.transform = "translateX(0px)";
       element.addEventListener("dragstart",event=>event.preventDefault());
       return element;
