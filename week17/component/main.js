@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2020-08-01 10:55:35
- * @LastEditTime: 2020-08-03 10:43:14
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \Frontend-01-Template\week17\component\main.js
- */
 // React版的创建
 import { createElement,Text,Wrapper } from "./createElement";
 import { Timeline,Animation } from "./animation.js";
