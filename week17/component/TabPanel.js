@@ -13,7 +13,7 @@ export class TabPanel {
 
     this.childViews = this.children.map(child => <div style="width:300px;min-height:300px">{child}</div>);
     this.titleViews = this.children.map((child,i) => <span onClick={ () => this.select(i)} 
-        style="width:300px;background:lightgreen;margin:5px 5px 0px 5px;font-size:24px;padding:0px;">{child.getAttribute("title") || " "}</span>);
+        style="width:300px;cursor:pointer;background:lightgreen;margin:5px 5px 0px 5px;font-size:24px;padding:0px;">{child.getAttribute("title") || " "}</span>);
 
     setTimeout(() => this.select(0) , 16);
 
