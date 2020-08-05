@@ -45,5 +45,4 @@ let lest = <ListView data={data}>
   </ListView>
 
 lest.mountTo(document.body);
-// panel2.mountTo(document.body);
 window.lest = lest;
