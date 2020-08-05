@@ -2,7 +2,7 @@ import { createElement,Text,Wrapper } from "./createElement";
 import { Timeline,Animation } from "./animation.js";
 
 
-export class iew {
+export class ListView {
   constructor(config){
     this.children = [];
     this.attributes  = new Map();
@@ -10,11 +10,11 @@ export class iew {
     this.state = Object.create(null);
   }
   render(){
-    return <div class="tab-panel" style="width:300px;">
-        <h1 style="width:300px;margin-bottom:0px;">{this.titleViews}</h1>
-        <div style="border:solid 1px lightgreen;">
-          { this.childViews }
-        </div>  
+    let data = this.getAttribute("data");
+    return <div class="list-view" style="width:300px;">
+      {
+        data.map(this.children[0])
+      }
     </div>
   }
   

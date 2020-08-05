@@ -1,6 +1,13 @@
 import {createElement,Text,Wrapper} from "./createElement";
 import { Timeline,Animation} from "./animation.js";
 
+import css from "./carousel.css";
+
+// let style = document.createElement("style");
+// style.innerHTML = css[0][1];
+
+// document.documentElement.appendChild(style);
+
 let linear = t => t;  // 匀速
 
 export class Carousel {
@@ -38,7 +45,6 @@ export class Carousel {
       }
       
       let onPan = (event) => {
-        console.log(children);
         let dx = event.clientX - event.startX;
         let lastElement = children[lastPosition];
         let currentElement = children[currentPosition];
@@ -49,7 +55,6 @@ export class Carousel {
         let nextTransformValue = 500 -500 * nextPosition + offset  + dx;
 
        
-        console.log(currentTransformValue + dx);
         currentElement.style.transform = `translateX(${currentTransformValue}px)`;
         lastElement.style.transform = `translateX(${lastTransformValue}px)`;
         nextElement.style.transform = `translateX(${nextTransformValue}px)`;
@@ -111,7 +116,6 @@ export class Carousel {
       let current = children[position];
       let next = children[nextPosition];
 
-      console.log(current);
       let currentAnimation = new Animation(current.style,"transform",
         - 100*position,-100 - 100*position,500,0,linear, v => `translateX(${5 * v}px)`);
       let nextAnimation = new Animation(next.style,"transform",
