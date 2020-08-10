@@ -12,6 +12,11 @@ function getChar(){
   })
 }
 
+function up(){
+  stdout.write();
+}
+
+
 void async function(){
   while(true){
     let char = await getChar();
