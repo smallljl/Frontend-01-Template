@@ -1,6 +1,10 @@
 {
   "devDependencies": {
     "css": "^3.0.0",
-    "css-loader": "^4.2.0"
+    "css-loader": "^4.2.0",
+    "lodash": "^4.17.19"
+  },
+  "dependencies": {
+    "yeoman-generator": "^4.11.0"
   }
 }
