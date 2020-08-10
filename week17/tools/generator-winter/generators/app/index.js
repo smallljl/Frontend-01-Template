@@ -22,7 +22,6 @@ module.exports = class extends Generator {
         [this.dependency.name]: '*'
       },
     };
-
     // Extend or create package.json file in destination path
     this.fs.extendJSON(this.destinationPath('package.json'), pkgJson);
   }
