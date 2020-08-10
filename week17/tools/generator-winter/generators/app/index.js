@@ -7,28 +7,19 @@ module.exports = class extends Generator {
   }
 
   async prompting() {
-    this.dependency = await this.prompt([
-      {
-        type: "input",
-        name: "name",
-        message: "Would you like to enable the Cool feature?"
-      }
-    ]);
+    this.answers = await this.prompt([{
+      type    : 'input',
+      name    : 'title',
+      message : 'Your project title',
+    }]);
   }
 
   writing() {
-    const pkgJson = {
-      devDependencies: {
-        [this.dependency.name]: '*'
-      },
-    };
-    // Extend or create package.json file in destination path
-    this.fs.extendJSON(this.destinationPath('package.json'), pkgJson);
+    this.fs.copyTpl(
+      this.templatePath('index.html'),
+      this.destinationPath('public/index.html'),
+      { title: this.answers.title }
+    );
   }
-
-  install() {
-    this.npmInstall();
-  }
-
  
 };
