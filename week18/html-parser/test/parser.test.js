@@ -116,9 +116,7 @@ it("script",()=>{
         `;
     let doc = parseHTML(`<script>${content}</script>`);
     let text = doc.children[0].children[0];
-    // console.log(text)
     assert.equal(text.type,"text");
-    // assert.equal(text.content,content);
 });
 
 it("attribute with no value",()=>{
