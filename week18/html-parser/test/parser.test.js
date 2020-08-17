@@ -11,7 +11,6 @@ it("parse a single element",()=>{
 });
 
 
-
 it("parse a single element with test content",()=>{
     let doc = parseHTML("<div>hello</div>");
     let text = doc.children[0].children[0];
@@ -100,23 +99,23 @@ it("with property3",()=>{
 });
 
 it("script",()=>{
-    let content = `
-        <div>abcd</div>
-        <span>x</span>
-        /script>
-        <script
-        <
-        </
-        </s
-        </sc
-        </scr
-        </scri
-        </scrip
-        </script
-        `;
+    let content = 
+`<div>abcd</div>
+<span>x</span>
+/script>
+<script
+<
+</
+</s
+</sc
+</scr
+</scri
+</scrip
+</script `;
     let doc = parseHTML(`<script>${content}</script>`);
     let text = doc.children[0].children[0];
     assert.equal(text.type,"text");
+    assert.equal(text.content,content);
 });
 
 it("attribute with no value",()=>{

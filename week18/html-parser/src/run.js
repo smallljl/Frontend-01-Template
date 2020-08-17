@@ -1,0 +1,1 @@
+import { parseHTML } from "../src/parser.js";

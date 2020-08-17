@@ -256,7 +256,6 @@ function endTagOpen(c){
 }
 //in script
 function scriptData(c){
-    
     if(c == "<") {
         return scriptDataLessThanSign;
     } else {
@@ -300,7 +299,7 @@ function scriptDataEndTagOpen(c){
 
         emit({
             type:"text",
-            content:"c"
+            content:c
         });
         return scriptData;
     }
@@ -371,6 +370,7 @@ function scriptDataEndTagNameI(c){
         return scriptData;
     }
 }
+
 //in script received </scrip
 function scriptDataEndTagNameP(c){
     if(c == "t") {
@@ -388,8 +388,11 @@ function scriptDataEndTagNameP(c){
     }
 }
 //in script received </script
+let spaces = 0;
+
 function scriptDataEndTag(c){
     if(c == " ") {
+        spaces++;
         return scriptDataEndTag;
     } if(c == ">") {
         emit({
@@ -400,13 +403,9 @@ function scriptDataEndTag(c){
     } else {
         emit({
             type:"text",
-            content:"</script"
+            content:"</script" + new Array(spaces).fill(" ").join("")
         });
-        emit({
-            type:"text",
-            content:c
-        });
-        return scriptData;
+        return scriptData(c);
     }
 }
 
