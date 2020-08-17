@@ -1,11 +1,8 @@
-"use strict"
+"use strict";
 
-Object.defineProperty(exports,"__esModule",{
-    value:true
-});
-
-exports.add = add;
-
-function add(a,b){
-    return a + b;
+function add(a, b) {
+  return a + b;
 }
+
+module.exports.add = add;
+
