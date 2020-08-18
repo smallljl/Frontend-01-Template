@@ -1,5 +1,5 @@
 module.exports = {
-  entry:"./main.js",
+  entry:"./src/main.js",
   module:{
     rules:[
       {
@@ -14,18 +14,6 @@ module.exports = {
          }
         },
       },
-      {
-        test:/\.view$/,
-        use:{
-          loader:require.resolve("./myloader.js")
-        }
-      },
-      {
-        test:/\.css$/,
-        use:{
-          loader:require.resolve("./cssloader.js")
-        }
-      }
     ]
   },
   mode:"development",
