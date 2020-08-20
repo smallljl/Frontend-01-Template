@@ -16,8 +16,16 @@ module.exports = {
       },
     ]
   },
+  plugins:[
+    new (require("html-webpack-plugin"))
+  ],
   mode:"development",
   optimization:{
     minimize:false
+  },
+  devServer:{
+    "open":true,
+    "compress":false,
+    "contentBase":"./src"
   }
 }

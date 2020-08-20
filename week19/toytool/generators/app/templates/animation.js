@@ -131,7 +131,7 @@ export class ColorAnimation {
   }
   valueFromProgression(progression){
     return {
-      r: parseInt(this.start.r + progression * (this.end.r - this.start.r)) ,
+      r: parseInt(this.start.r + progression * (this.end.r - this.start.r)),
       g: parseInt(this.start.g + progression * (this.end.g - this.start.g)),
       b: parseInt(this.start.r + progression * (this.end.b - this.start.b)),
       a: parseInt(this.start.a + progression * (this.end.a - this.start.a)),

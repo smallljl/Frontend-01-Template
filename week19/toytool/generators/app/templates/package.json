@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --require @babel/register",
     "coverage":"nyc mocha",
     "start":"webpack-dev-server",
     "build":"webpack"

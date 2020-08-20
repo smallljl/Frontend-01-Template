@@ -41,18 +41,37 @@ module.exports = class extends Generator {
       this.destinationPath("webpack.config.js"),
     );
 
-    /*this.npmInstall([
+    this.fs.copyTpl(
+      this.templatePath("main.test.js"),
+      this.destinationPath("test/main.test.js"),
+    );
+
+    this.fs.copyTpl(
+      this.templatePath(".babelrc"),
+      this.destinationPath(".babelrc"),
+    );
+
+    this.fs.copyTpl(
+      this.templatePath(".nycrc"),
+      this.destinationPath(".nycrc"),
+    );
+
+    /*
+    this.npmInstall([
       "webpack",
       "webpack-cli",
       "webpack-dev-server",
       "babel-loader",
       "@babel/core",
+      "@babel/register",
       "@babel/preset-env",
       "@babel/plugin-transform-react-jsx",
       "mocha",
       "nyc",
       "@istanbuljs/nyc-config-babel",
+      "html-webpack-plugin",
       "babel-plugin-istanbul",
-    ], {"save-dev" : true})*/
+    ], {"save-dev" : true});
+    */
   }
 }
