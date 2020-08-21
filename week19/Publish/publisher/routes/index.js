@@ -3,9 +3,8 @@ var router = express.Router();
 const fs = require("fs");
 
 /* GET home page. */
-router.get('/a', function(req, res, next) {
-  fs.writeFileSync("../server/public/"+req.query.filename,"Hello world");
-  res.render('index', { title: 'Express' });
+router.post('/a', function(req, res, next) {
+  fs.writeFileSync("../server/public/"+req.query.filename,req.body.content);
 });
 
 module.exports = router;
