@@ -56,7 +56,7 @@ module.exports = class extends Generator {
       this.destinationPath(".nycrc"),
     );
 
-    /*
+    
     this.npmInstall([
       "webpack",
       "webpack-cli",
@@ -72,6 +72,5 @@ module.exports = class extends Generator {
       "html-webpack-plugin",
       "babel-plugin-istanbul",
     ], {"save-dev" : true});
-    */
   }
 }
