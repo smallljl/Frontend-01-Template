@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+            font-weight: bold;
+        }
+        .keywords{
+            color: blue;
+        }
+        .indentifier{
+            color: green;
+        }
+        .punctuator{
+            color: hotpink;
+        }
+    </style>
+</head>
+<body>
+    <pre id="container">
+
+    </pre>
+    <script>
+        let source = `
+            function sleep(time){
+                return new Promise((resolve,reject)=>{
+                    setTimeout(resolve,time);
+                })
+            }
+        `;
+
+        let regexp = /(function|new|return)|([ \t\n\r]+)|([a-zA-Z][a-zA-Z0-9]*)|([\(\)\{\}\,\;])/g;
+        let dictionary = ["keywords","whitespace","indentifier","punctuator"];
+        let token = null;
+        let lastIndex = 0;
+        let container = document.getElementById("container");
+        do{
+            lastIndex = regexp.lastIndex;
+            token = regexp.exec(source);
+            console.log(lastIndex,token);
+            if(!token) break;
+            let text = document.createElement("span");
+            text.textContent = token[0];
+            for(let i = 1; i < 5; i++){
+                if(token[i]){
+                    text.classList.add(dictionary[i-1]);
+                }
+            }
+            container.appendChild(text);
+        }while(token)
+    </script>
+</body>
+</html>

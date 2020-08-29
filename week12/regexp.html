@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        "[a=value]".match(/\[(?:[^=]+)=(?:[^\]]+)\]/)     // ?: 捕获不匹配
+        //  ["[a=value]", index: 0, input: "[a=value]", groups: undefined]
+
+        "abc".replace(/a(b)c/g,function(str,$1){ console.log(str,$1)})  
+        // abc b
+
+        "abc".replace(/a(b)c/g,"$1$1");
+        // "bb"       
+        
+        "abc".replace(/a(b)c/g,"$$1$$1");
+        // $1$1
+    </script>
+</body>
+</html>
