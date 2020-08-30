@@ -1,59 +1,62 @@
 <style>
-  div{
-    background-color: grey;
-    display: inline-block;
-    margin:30px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-  }
-  .green.light{
-    background-color: green;
-  }
-  .red.light{
-    background-color: red;
-  }
-  .yellow.light{
-    background-color: yellow;
-  }
+    div{
+        background-color: grey;
+        display: inline-block;
+        margin: 30px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    .green.light{
+        background-color: green;
+    }
+    .yellow.light{
+        background-color: yellow;
+    }
+    .red.light{
+        background-color: red;
+    }
 </style>
+
 <div class="green"></div>
 <div class="yellow"></div>
-<div class="red light"></div>
-<script>
-  function green(){
-    let lights = document.getElementsByTagName("div");
-    for(let i = 0; i < 3; i++)
-      lights[i].classList.remove("light");
-    document.getElementsByClassName("green")[0].classList.add("light");
-  }
-  function red(){
-    let lights = document.getElementsByTagName("div");
-    for(let i = 0; i < 3; i++)
-      lights[i].classList.remove("light");
-    document.getElementsByClassName("red")[0].classList.add("light");
-  }
-  function yellow(){
-    let lights = document.getElementsByTagName("div");
-    for(let i = 0; i < 3; i++)
-      lights[i].classList.remove("light");
-    document.getElementsByClassName("yellow")[0].classList.add("light");
-  }
+<div class="red"></div>
 
-  function sleep(time){
-    return new Promise((resolve,reject)=>{
-      setTimeout(resolve,time)
-    });
-  }
-  function go(){
-    green();
-    sleep(1000).then(()=> {
-      yellow();
-      return sleep(200);
-    }).then(()=>{
-      red();
-      return sleep(500);
-    }).then(go);
-  }
-  go();
+<script>
+    function green(){
+        let lights = document.getElementsByTagName("div");
+        for(let i = 0; i < 3;i++)
+            lights[i].classList.remove("light");
+        document.getElementsByClassName("green")[0].classList.add("light");
+    }
+    function red(){
+        let lights = document.getElementsByTagName("div");
+        for(let i = 0; i < 3;i++)
+            lights[i].classList.remove("light");
+        document.getElementsByClassName("red")[0].classList.add("light");
+    }
+    function yellow(){
+        let lights = document.getElementsByTagName("div");
+        for(let i = 0; i < 3;i++)
+            lights[i].classList.remove("light");
+        document.getElementsByClassName("yellow")[0].classList.add("light");
+    }
+
+    function sleep(time){
+        return new Promise((resolve,reject)=>{
+            setTimeout(resolve,time);
+        });
+    }
+
+     // 绿色 10 黄色 2 red 5
+    function go(){
+        green();
+        sleep(1000).then(()=>{
+            yellow()
+            return sleep(200);
+        }).then(()=>{
+            red();
+            return sleep(500);
+        }).then(go)
+    }
 </script>

@@ -1,110 +1,116 @@
 <style>
-  div{
-    background-color: grey;
-    display: inline-block;
-    margin:30px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-  }
-  .green.light{
-    background-color: green;
-  }
-  .red.light{
-    background-color: red;
-  }
-  .yellow.light{
-    background-color: yellow;
-  }
+    div{
+        background-color: grey;
+        display: inline-block;
+        margin: 30px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    .green.light{
+        background-color: green;
+    }
+    .yellow.light{
+        background-color: yellow;
+    }
+    .red.light{
+        background-color: red;
+    }
 </style>
+
 <div class="green"></div>
 <div class="yellow"></div>
-<div class="red light"></div>
-<button id="next">next</button>
+<div class="red"></div>
+<button id="next">NEXT</button>
+
 <script>
-  function green(){
-    let lights = document.getElementsByTagName("div");
-    for(let i = 0; i < 3; i++)
-      lights[i].classList.remove("light");
-    document.getElementsByClassName("green")[0].classList.add("light");
-  }
-  function red(){
-    let lights = document.getElementsByTagName("div");
-    for(let i = 0; i < 3; i++)
-      lights[i].classList.remove("light");
-    document.getElementsByClassName("red")[0].classList.add("light");
-  }
-  function yellow(){
-    let lights = document.getElementsByTagName("div");
-    for(let i = 0; i < 3; i++)
-      lights[i].classList.remove("light");
-    document.getElementsByClassName("yellow")[0].classList.add("light");
-  }
-
-  function sleep(time){
-    return new Promise((resolve,reject)=>{
-      setTimeout(resolve,time)
-    });
-  }
-  function happen(element,eventName){
-    return new Promise((resolve,reject)=>{
-      element.addEventListener(eventName,resolve,{once:true});  // 监听一次
-    });
-  }
-  /**
-   * @description: 
-   * @param {type} 
-   * @return: 
-   */
-  function* go(){
-    while(true){
-      green();
-      yield sleep(1000);
-      yellow();
-      yield sleep(200);
-      red();
-      yield sleep(100);
+    function green(){
+        let lights = document.getElementsByTagName("div");
+        for(let i = 0; i < 3;i++)
+            lights[i].classList.remove("light");
+        document.getElementsByClassName("green")[0].classList.add("light");
     }
-  }
-
-  /**
-   * @description: co(generator) 
-   * @param {type} 
-   * @return: 
-   */
-  function co1(iterator){
-    let {value,done} = iterator.next();
-    if(done)
-      return;
-    if(value instanceof Promise)
-    value.then(()=>{
-      co(iterator);
-    });
-  }
-  // co1(go());
-
-  function run(iterator){
-    let {value,done} = iterator.next();
-    if(done)
-      return;
-    if(value instanceof Promise)
-    value.then(()=>{
-      run(iterator);
-    });
-  }
-
-  function co(generator){
-    return function(){
-      let iterator = generator();
-      let {value,done} = iterator.next();
-      if(done)
-        return;
-      if(value instanceof Promise)
-      value.then(()=>{
-        run(iterator);
-      });
+    function red(){
+        let lights = document.getElementsByTagName("div");
+        for(let i = 0; i < 3;i++)
+            lights[i].classList.remove("light");
+        document.getElementsByClassName("red")[0].classList.add("light");
     }
-  }
+    function yellow(){
+        let lights = document.getElementsByTagName("div");
+        for(let i = 0; i < 3;i++)
+            lights[i].classList.remove("light");
+        document.getElementsByClassName("yellow")[0].classList.add("light");
+    }
 
-  go = co(go);
+    function sleep(time){
+        return new Promise((resolve,reject)=>{
+            setTimeout(resolve,time);
+        });
+    }
+
+    function  *go(){
+        while(true){
+            green();
+            yield sleep(1000);
+            yellow();
+            yield sleep(200);
+            red();
+            yield sleep(500);
+        }
+    }
+
+    /*
+    function co(iterator){
+        let {value,done} = iterator.next();
+        if(done)
+            return;
+        if(value instanceof Promise)
+            value.then(()=>{
+                co(iterator);
+            });
+    }*/
+
+    function run(iterator){
+        let {value,done} = iterator.next();
+        console.log({value,done});
+        if(done)
+            return;
+        if(value instanceof Promise)
+            value.then(()=>{
+                run(iterator);
+        });
+    }
+
+    function co(generator){
+        return function(){
+           return run(generator())
+        }
+    }
+
+    go = co(go);
+
+
+
+    function* g(){
+        yield 1;
+        yield 2;
+        yield 3;
+    }
+    for(let v of g()){
+        console.log(v);
+    }
+
+
+    async function* g(){
+        let i = 0;
+        while(true){
+            await sleep(1000);
+            yield i++;
+        }
+    }
+
+    for await(let v of g()){
+        console.log(v);
+    }
 </script>

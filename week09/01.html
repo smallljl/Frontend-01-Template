@@ -1,0 +1,15 @@
+<style>
+   
+    div#a.b .c[id=x]{
+        color: red;
+    }
+
+    /* 0 1 3 1 */
+    #a.b div.c.d{   
+        color: blue;
+    }
+</style>
+
+<div id="a" class="b">
+    <div class="c d" id="x">red</div>
+</div>

@@ -1,0 +1,185 @@
+<style>
+    .cell{
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: white;
+        border-bottom: solid 1px grey;
+        border-right: solid 1px grey;
+        vertical-align: middle;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    #container{
+        width: 701px;
+    }
+</style>
+
+
+<div id="container"></div>
+<button onclick="localStorage.map = JSON.stringify(map)">save</button>
+
+<script>
+    class Sorted {
+        constructor(data,compare){
+            this.data = data;
+            this.compare = compare;
+        }
+        take(){
+            if(!this.data.length){
+                return;
+            }
+            let min = this.data[0];
+            let minIndex = 0;
+            for(let i = 1; i < this.data.length; i++){
+                if(this.compare(min,this.data[i]) > 0){
+                    min = this.data[i];
+                    minIndex = i;
+                }
+            }
+            this.data[minIndex] = this.data[this.data.length - 1];   
+            this.data.pop();
+            return min;
+        }
+        insert(v){
+            this.data.push(v);
+        }
+        get length(){
+            return this.data.length;
+        }
+    }
+
+    class BinaryHeap {
+        constructor(data,compare){
+            this.data = data;
+            this.compare = compare;
+        }
+        take(){
+            if(!this.data.length)
+                return;
+            let min = this.data[0];
+            let i = 0;
+            // fix heap
+            while(i < this.data.length){
+                if(i * 2 + 1 >= this.data.length)
+                    break;
+                if(i * 2 + 2 >= this.data.length){  // 右边没有
+                    this.data[i] = this.data[i * 2 + 1];
+                    i = i * 2 + 1;
+                    break;
+                }
+                // 左右节点比较
+                if(this.compare(this.data[i * 2 + 1],this.data[i * 2 +2]) < 0) {
+                    this.data[i] = this.data[i * 2 + 1];
+                    i = i * 2  + 1;
+                } else {
+                    this.data[i] = this.data[i * 2 + 2];
+                    i = i * 2  + 2;
+                }
+            }
+            if(i < this.data.length - 1){
+                this.insertAt(i,this.data.pop());
+            } else {
+                this.data.pop();
+            }
+            return min;
+        }
+        insertAt(i,v){
+            this.data[i] = v;
+            while(i > 0 && this.compare(v,this.data[Math.floor((i-1)/2)]) < 0){
+                this.data[i] = this.data[Math.floor((i-1)/2)];
+                this.data[Math.floor((i-1)/2)] = v;
+                i = Math.floor((i-1)/2)
+            }
+        }
+        insert(v){
+            this.insertAt(this.data.length,v);
+        }
+        get length(){
+            return this.data.length;
+        }
+    }
+
+    let map = localStorage.map ? JSON.parse(localStorage.map) : new Array(10000).fill(0);
+    let container = document.getElementById("container");
+    for(let y = 0; y < 100; y++){
+        for(let x = 0; x < 100; x++){
+            let cell = document.createElement("div");
+            cell.classList.add("cell");
+            if(map[y * 100 + x] === 1)   //  render
+                cell.style.backgroundColor = "red";
+            cell.addEventListener("mousemove",()=>{
+                if(mouse){
+                    if(clear){
+                        cell.style.backgroundColor = "";
+                        map[y * 100 + x] = 0;
+                    } else {
+                        cell.style.backgroundColor = "red";
+                        map[y * 100 + x] = 1;
+                    }
+                }
+            });
+            container.appendChild(cell);
+        }
+    }
+    let mouse = false; 
+    let clear = false; // 清楚
+    document.addEventListener("mousedown",e => {
+        mouse = true;
+        clear = (e.which === 3);   // 右键 clear
+    });
+    document.addEventListener("mouseup",()=>mouse = false);
+    document.addEventListener("contextmenu",e=>e.preventDefault());  // 取消默认右键
+    function sleep(time){
+        return new Promise((resolve,reject)=>{
+            setTimeout(resolve,time);
+        })
+    }
+
+
+    /**
+     *  寻路的函数 
+     */
+    async function findPath(map,start,end){
+        map = map.slice();
+        function distance([x,y]){
+            return (x - end[0]) ** 2 + (y-end[1]) ** 2;
+        }
+        let collection = new BinaryHeap([start],(a,b)=>distance(a)-distance(b)) ;
+        container.children[start[1]*100 + start[0]].style.backgroundColor = "pink";
+        container.children[end[1]*100 + end[0]].style.backgroundColor = "orange";
+        async function insert([x,y],pre){
+            if(map[100*y+x] !== 0)  // 障碍
+                return;
+            if(x < 0 || y < 0 || x >= 100 || y >= 100)  // 边界
+                return;
+            await sleep(50);
+            container.children[y * 100 +x].style.backgroundColor = "yellowgreen";
+            map[y*100+x] = pre;
+            collection.insert([x,y]);
+        }
+        while(collection.length){
+            let [x,y] = collection.take();
+            if(x === end[0] && y === end[1]){
+                let path = [];
+                while(x !== start[0] || y !== start[1]){
+                    path.push([x,y]);
+                    container.children[y * 100 +x].style.backgroundColor = "lightpink";
+                    [x,y] = map[y * 100 + x];
+                }
+                return path;
+            }
+            await insert([x - 1, y], [x,y]);   // 左
+            await insert([x + 1, y], [x,y]);   // 右
+            await insert([x, y - 1], [x,y]);   // 上
+            await insert([x, y + 1], [x,y]);   // 下
+            await insert([x - 1, y - 1], [x,y]);   // 左上角
+            await insert([x + 1, y - 1], [x,y]);   // 右
+            await insert([x - 1, y + 1], [x,y]);   // 左下
+            await insert([x + 1, y + 1], [x,y]);   // 右下
+        }
+        return null;
+    }
+  
+   
+</script>
