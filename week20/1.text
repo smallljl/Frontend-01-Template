@@ -1,0 +1,5 @@
+https://github.com/login/oauth/authorize?
+client_id =Iv1.ef86869230f38d76&
+redirect_uri = http%3A%2F%2Flocalhost&
+ scope =  read%3Auser&
+ state = 123abc
