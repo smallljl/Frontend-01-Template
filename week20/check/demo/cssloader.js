@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2020-08-28 09:40:18
- * @LastEditTime: 2020-09-02 09:26:27
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \Frontend-01-Template\week20\check\demo\cssloader.js
- */
 let css = require("css");
 
 module.exports = function (source, map) {
