@@ -1,0 +1,43 @@
+// 该文件放在.git /hook/里面
+
+#!/usr/bin/env node
+
+const process = require("process");
+const child_process = require("child_process");
+const { ESLint } = require("eslint");
+
+function exec(command){
+  return new Promise(resolve=>{
+    child_process.exec(command,resolve);
+  });
+}
+
+(async function main() {
+ 
+
+  // 1. Create an instance.
+  const eslint = new ESLint();
+
+  // 2. Lint files.
+
+  await exec("git stash save -q --keep-index");
+  const results = await eslint.lintFiles(["./main.js"]);
+  await exec("git stash pop");
+
+  // 3. Format the results.
+  
+  const formatter = await eslint.loadFormatter("stylish");
+  const resultText = formatter.format(results);
+  console.log(results);
+
+  for(let result of results){
+    if(result.errorCount > 0 )
+      process.exitCode = 1;
+  }
+  // 4. Output it.
+  console.log(resultText);
+  
+})().catch((error) => {
+  process.exitCode = 1;
+  console.error(error);
+});
